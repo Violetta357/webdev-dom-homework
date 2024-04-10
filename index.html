@@ -8,7 +8,7 @@
 
   <body>
     <div class="container">
-      <ul class="comments">
+      <ul class="comments" id="comments">
         <li class="comment">
           <div class="comment-header">
             <div>Глеб Фокин</div>
@@ -49,15 +49,17 @@
           type="text"
           class="add-form-name"
           placeholder="Введите ваше имя"
+          id="input-name"
         />
         <textarea
           type="textarea"
           class="add-form-text"
           placeholder="Введите ваш коментарий"
           rows="4"
+          id="input-text"
         ></textarea>
         <div class="add-form-row">
-          <button class="add-form-button">Написать</button>
+          <button class="add-form-button" id="add-btn">Написать</button>
         </div>
       </div>
     </div>
@@ -66,6 +68,74 @@
   <script>
     "use strict";
     // Код писать здесь
+    
+// поиск необходимых элементов по id
+    const commentsElement = document.getElementById("comments");
+    const inputNameEl = document.getElementById("input-name");
+    const inputTextEl = document.getElementById("input-text");
+    const addBtnEl = document.getElementById("add-btn");
+
+    //обработчик клика
+
+    addBtnEl.addEventListener("click", () => {
+
+      // обработчик ошибки пустого поля имениени
+      inputNameEl.classList.remove("error");
+      if (inputNameEl.value === "") {
+        inputNameEl.classList.add("error");
+        return;
+      }
+// обработчик ошибки пустого поля комментария
+      inputTextEl.classList.remove("error");
+      if (inputTextEl.value === "") {
+        inputTextEl.classList.add("error");
+        return;
+      }
+
+
+      // формат и вызов даты
+      const date = new Date();
+      const formateDate =
+        date.getDate().toString().padStart(2, 0) +
+        "." +
+        (date.getMonth() + 1).toString().padStart(2, 0) +
+        "." +
+        date.getFullYear().toString().slice(-2) +
+        " " +
+        date.getHours().toString().padStart(2, 0) +
+        ":" +
+        date.getMinutes().toString().padStart(2, 0);
+
+      const oldCommentHtml = commentsElement.innerHTML;
+// форма доавления комментария
+      commentsElement.innerHTML =
+        oldCommentHtml +
+        `
+
+     <li class="comment">
+          <div class="comment-header">
+            <div>${inputNameEl.value}</div>
+            <div>${formateDate}</div>
+          </div>
+          <div class="comment-body">
+            <div class="comment-text">
+              ${inputTextEl.value}
+            </div>
+          </div>
+          <div class="comment-footer">
+            <div class="likes">
+              <span class="likes-counter">0</span>
+              <button class="like-button"></button>
+            </div>
+          </div>
+        </li>
+     `;
+
+    //  очистка полей имени и текста после отправки комментария
+      inputNameEl.value = "";
+      inputTextEl.value = "";
+    });
+
     console.log("It works!");
   </script>
 </html>
